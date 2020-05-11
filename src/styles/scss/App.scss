@@ -1,0 +1,27 @@
+@import "normalize";
+@import "skeleton";
+
+$danger: red;
+
+.hover-danger:hover {
+  color: $danger;
+}
+
+button.button-danger {
+  background-color: $danger;
+  border-color: $danger;
+  color: white;
+
+  &:hover {
+    background-color: darken($danger, 10%);
+    border-color: darken($danger, 10%);
+  }
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+input ~ button {
+  margin-left: 8px;
+} 
