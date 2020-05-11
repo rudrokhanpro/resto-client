@@ -22,6 +22,10 @@ button.button-danger {
   text-transform: uppercase;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 input ~ button {
   margin-left: 8px;
-} 
+}

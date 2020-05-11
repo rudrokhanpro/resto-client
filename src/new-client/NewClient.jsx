@@ -17,11 +17,25 @@ export default function NewClient(props) {
     },
 
     onSubmit: (values) => {
-      createNewClient({ ...values, phone_numbers: phoneNumbers });
+      // Capitalize firsname
+      values.firstname = values.firstname
+        .split(" ")
+        .map((name) => name[0].toUpperCase() + name.substring(1))
+        .join(" ");
 
-      formik.resetForm();
+      createNewClient({ ...values, phone_numbers: phoneNumbers }).then(
+        (res) => {
+          const client = res.client;
 
-      history.push("/");
+          if (client) {
+            history.push(`/client/${client._id}`, {
+              client,
+            });
+          } else {
+            alert("Une erreur s'est produite");
+          }
+        },
+      );
     },
   });
 
@@ -42,7 +56,7 @@ export default function NewClient(props) {
               required
               value={formik.values.lastname}
               onChange={formik.handleChange}
-              className="u-full-width"
+              className="u-full-width uppercase"
             />
           </div>
           <div className="six columns">
@@ -51,10 +65,9 @@ export default function NewClient(props) {
               type="text"
               id="firstname"
               name="firstname"
-              required
               value={formik.values.firstname}
               onChange={formik.handleChange}
-              className="u-full-width uppercase"
+              className="u-full-width capitalize"
             />
           </div>
         </div>
@@ -127,7 +140,7 @@ function createNewClient(values) {
   const API_URL = "http://192.168.1.105:1452/api/v1/clients/new";
   const body = JSON.stringify(values);
 
-  fetch(API_URL, {
+  return fetch(API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

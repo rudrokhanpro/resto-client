@@ -835,5 +835,8 @@ button.button-danger {
 .uppercase {
   text-transform: uppercase; }
 
+.capitalize {
+  text-transform: capitalize; }
+
 input ~ button {
   margin-left: 8px; }
