@@ -1,7 +1,7 @@
 import React from "react";
-import NewClient from "./new-client";
 import SearchClient from "./search-client";
 import ClientPage from "./client-page";
+import ClientForm from "./client-form/ClientForm";
 import "./styles/css/App.css";
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
@@ -18,7 +18,7 @@ function App() {
           <Switch>
             <Route path="/" component={Home} exact />
             <Route path="/search-client" component={SearchClient} />
-            <Route path="/new-client" component={NewClient} />
+            <Route path="/client-form" component={ClientForm} />
             <Route path="/client/" component={ClientPage} />
           </Switch>
         </main>
@@ -38,7 +38,7 @@ function Navigation() {
           <Link to="/search-client">Rechercher un client</Link>
         </li>
         <li>
-          <Link to="/new-client">Nouveau client</Link>
+          <Link to="/client-form">Nouveau client</Link>
         </li>
       </ul>
     </nav>

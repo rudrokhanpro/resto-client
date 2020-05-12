@@ -9,6 +9,12 @@ export default function ClientPage() {
 
   const fullname = client.lastname + " " + client.firstname;
 
+  function goToClientForm() {
+    history.replace("/client-form", {
+      client,
+    });
+  }
+
   function handleDelete() {
     if (window.confirm(`Supprimer le client ${fullname} ?`)) {
       deleteClient(client._id).then((wasDeleted) => {
@@ -19,9 +25,7 @@ export default function ClientPage() {
 
   return (
     <div>
-      <h2>
-        {fullname}
-      </h2>
+      <h2>{fullname}</h2>
 
       <ul>
         {/* TODO: Show only  non-empty information */}
@@ -35,9 +39,15 @@ export default function ClientPage() {
         </li>
       </ul>
 
+    <div className="button-group">
+      <button className="button" onClick={goToClientForm}>
+        Modifier
+      </button>
       <button className="button-danger" onClick={handleDelete}>
         Supprimer
       </button>
+
+    </div>
     </div>
   );
 }

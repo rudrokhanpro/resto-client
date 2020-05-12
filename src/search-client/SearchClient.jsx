@@ -12,6 +12,7 @@ export default function SearchClient(props) {
       .then((clients) => {
         setResults(clients);
       })
+      .catch(console.log)
       .finally(() => setLoading(false));
   }, []);
 
@@ -100,7 +101,8 @@ export default function SearchClient(props) {
  */
 function getClientsByLastname(lastname) {
   const API_URL =
-    "http://192.168.1.105:1452/api/v1/clients/search/lastname/" + lastname;
+    // "http://192.168.1.105:1452/api/v1/clients/search/lastname/" + lastname;
+    "http://localhost:1452/api/v1/clients/search/lastname/" + lastname;
 
   return fetch(API_URL)
     .then((res) => res.json())
@@ -112,7 +114,7 @@ function getClientsByLastname(lastname) {
  * @returns {Promise} Array of clients
  */
 function getAllClients() {
-  const API_URL = "http://192.168.1.105:1452/api/v1/clients";
+  const API_URL = "http://localhost:1452/api/v1/clients";
 
   return fetch(API_URL)
     .then((res) => res.json())

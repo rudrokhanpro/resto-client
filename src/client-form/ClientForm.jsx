@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
-import { useHistory } from "react-router-dom";
 import PhoneNumbers from "./PhoneNumbers";
 
-export default function NewClient(props) {
+export default function ClientForm(props) {
+  const location = useLocation();
   const history = useHistory();
+  const client = location.state ? location.state.client : undefined;
+  const [phoneNumbers, setPhoneNumbers] = useState(
+    client ? client.phone_numbers : [],
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -14,6 +19,9 @@ export default function NewClient(props) {
       zip: "",
       city: "",
       comments: "",
+      // if client informations are provided
+      // then populate form
+      ...client,
     },
 
     onSubmit: (values) => {
@@ -23,27 +31,35 @@ export default function NewClient(props) {
         .map((name) => name[0].toUpperCase() + name.substring(1))
         .join(" ");
 
-      createNewClient({ ...values, phone_numbers: phoneNumbers }).then(
-        (res) => {
-          const client = res.client;
-
-          if (client) {
-            history.push(`/client/${client._id}`, {
-              client,
+      if (client) {
+        updateClient({ ...values, phone_numbers: phoneNumbers })
+          .then((res) => {
+            history.replace(`/client/${client._id}`, {
+              client: res.client,
             });
-          } else {
-            alert("Une erreur s'est produite");
-          }
-        },
-      );
+          })
+          .catch(console.log);
+      } else {
+        createNewClient({ ...values, phone_numbers: phoneNumbers }).then(
+          (res) => {
+            const newClient = res.client;
+
+            if (newClient) {
+              history.push(`/client/${newClient._id}`, {
+                client: newClient,
+              });
+            } else {
+              alert("Une erreur s'est produite");
+            }
+          },
+        );
+      }
     },
   });
 
-  const [phoneNumbers, setPhoneNumbers] = useState([]);
-
   return (
     <div>
-      <h2>Nouveau client</h2>
+      <h2>{client ? "Modifier" : "Nouevau client"}</h2>
 
       <form onSubmit={formik.handleSubmit}>
         <div className="row">
@@ -137,7 +153,7 @@ export default function NewClient(props) {
 }
 
 function createNewClient(values) {
-  const API_URL = "http://192.168.1.105:1452/api/v1/clients/new";
+  const API_URL = "http://localhost:1452/api/v1/clients/new";
   const body = JSON.stringify(values);
 
   return fetch(API_URL, {
@@ -146,5 +162,17 @@ function createNewClient(values) {
       "Content-Type": "application/json",
     },
     body,
+  }).then((res) => res.json());
+}
+
+function updateClient(infos) {
+  const API_URL = "http://localhost:1452/api/v1/clients/id/" + infos._id;
+
+  return fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(infos),
   }).then((res) => res.json());
 }
